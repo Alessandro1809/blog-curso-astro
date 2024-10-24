@@ -1,4 +1,5 @@
 ---
+import { Formateer } from "@/utils/formateer";
 import type { GetStaticPaths } from "astro";
 import { getCollection } from "astro:content";
 import BlogLayout from "src/layouts/BlogLayout.astro";
@@ -15,9 +16,33 @@ export const getStaticPaths = (async () => {
 }) satisfies GetStaticPaths;
 
 const {post} =Astro.props;
+const frontmatter = post.data;
 
+const { Content, headings } = await post.render();
 ---
 
-<BlogLayout title={post.data.title}>
-   <h1>Holaaaaa</h1>
+<BlogLayout title={frontmatter.title}>
+   <h1 class="text-xs text-gray-500 -mb-4 font-medium">{frontmatter.title}</h1>
+   <h4 class="text-xs text-gray-300 font-medium">{frontmatter.author}</h4>
+   <p class="text-sm text-gray-400">{Formateer.formatDate(frontmatter.date)}</p>
+    <!-- Tabla de contenidos -->
+     <h3 class="font-medium">Tabla de contenidos</h3>
+
+
+
+        <ol class="text-sm text-gray-400 ">
+           {headings.map((heading, index) => (
+               <li>
+                   <a href={`#${heading.slug}`} class="text-md hover:underline font-medium text-gray-400">
+                      {index + 1} - {heading.text}
+                   </a>
+               </li>
+           ))}
+        </ol>
+    <!-- Contenido -->
+   <Content />
+
+   <div class="my-12">
+        <a class="text-white text-xl font-medium bg-cyan-600/40 rounded-full px-4 py-2" href="#btn-back">Ir arriba</a>
+   </div>
 </BlogLayout>

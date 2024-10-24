@@ -1,6 +1,7 @@
 ---
 
 import { Formateer } from '@/utils/formateer';
+import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 
 interface Props{
@@ -14,7 +15,8 @@ const frontmatter = post.data;
 ---
 
 <div class="lg:flex">
-    <img class="object-cover w-full h-56 rounded-lg lg:w-64" src={frontmatter.image} alt={frontmatter.title}>
+    <Image class="object-cover w-full h-56 rounded-lg lg:w-64" src={frontmatter.image} alt={frontmatter.title}
+    width="200" height="200" quality={'low'} format={'webp'} loading={'lazy'}/>
 
     <div class="flex flex-col justify-between py-6 lg:mx-6">
         <a href={`/posts/${post.slug}`} class="text-xl font-semibold hover:cursor-pointer hover:underline text-white ">
