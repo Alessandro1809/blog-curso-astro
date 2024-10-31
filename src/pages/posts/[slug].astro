@@ -1,6 +1,8 @@
 ---
 import { Formateer } from "@/utils/formateer";
 import type { GetStaticPaths } from "astro";
+import { Image } from "astro:assets";
+import { getEntry } from "astro:content";
 import { getCollection } from "astro:content";
 import BlogLayout from "src/layouts/BlogLayout.astro";
 
@@ -19,12 +21,28 @@ const {post} =Astro.props;
 const frontmatter = post.data;
 
 const { Content, headings } = await post.render();
+
+const author = await getEntry('author',post.data.author.id);
 ---
 
 <BlogLayout title={frontmatter.title}>
-   <h1 class="text-xs text-gray-500 -mb-4 font-medium">{frontmatter.title}</h1>
-   <h4 class="text-xs text-gray-300 font-medium">{frontmatter.author}</h4>
-   <p class="text-sm text-gray-400">{Formateer.formatDate(frontmatter.date)}</p>
+   <h1 class="text-xs text-gray-500 -mb-2 font-medium">{frontmatter.title}</h1>
+   
+
+    <div class="flex gap-4">
+        <Image class="w-16 h-16 rounded-full" src={author.data.avatar} alt={author.data.name} width={50} height={50} quality={'high'} format={'webp'} loading={'lazy'} transition:name={`${post.slug}-image`}/>
+        
+        <div class="flex flex-col">
+            <a href=`../blog/${frontmatter.author.id}` class="text-md text-gray-300 font-medium">{author.data.name}</a>
+            <p class="text-sm text-gray-400">{Formateer.formatDate(frontmatter.date)}</p>
+        </div>
+    </div>
+
+  
+
+   <!-- imagen del post -->
+    <Image class={"object-cover w-full h-[250px] rounded-lg my-5"} src={frontmatter.image} alt={frontmatter.title} width={500} height={300} quality={'high'} format={'webp'} loading={'lazy'} transition:name={`${post.slug}-image`}/>
+    
     <!-- Tabla de contenidos -->
      <h3 class="font-medium">Tabla de contenidos</h3>
 

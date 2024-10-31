@@ -1,0 +1,46 @@
+---
+import type { GetStaticPaths } from "astro";
+import { siteConfig } from 'src/config/site-config';
+import MainLayout from '../../layouts/MainLayout.astro';
+import TypedBlogPost from 'src/components/TypedBlogPost.astro';
+import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
+
+
+export const getStaticPaths = (async() => {
+
+    // const blogPost = await getCollection('blog');
+    // const authorPosts = await getCollection('author');
+    const [ authorPosts,blogPost] = await Promise.all([
+        getCollection('author'),
+        getCollection('blog'),
+        
+    ]);
+
+    return authorPosts.map((author) => ({
+        params: { author: author.id },
+        props: { blogPosts: blogPost.filter((post) => post.data.author.id === author.id),
+        author: author.data
+         }
+    }));
+}) satisfies GetStaticPaths;
+
+const { blogPosts, author } = Astro.props;
+---
+<!-- component -->
+<body class="bg-gray-100">
+    <div class="max-w-lg mx-auto my-10 bg-white rounded-lg shadow-md p-5">
+      <Image class="w-32 h-32 rounded-full mx-auto" src={author.avatar} alt="Profile picture">
+      <h2 class="text-center text-2xl font-semibold mt-3">{author.name}</h2>
+     
+      <div class="flex justify-center mt-5">
+        <a href="#" class="text-blue-500 hover:text-blue-700 mx-3">Twitter</a>
+        <a href="#" class="text-blue-500 hover:text-blue-700 mx-3">LinkedIn</a>
+        <a href="#" class="text-blue-500 hover:text-blue-700 mx-3">GitHub</a>
+      </div>
+      <div class="mt-5">
+        <h3 class="text-xl font-semibold">Bio</h3>
+        <p class="text-gray-600 mt-2">John is a software engineer with over 10 years of experience in developing web and mobile applications. He is skilled in JavaScript, React, and Node.js.</p>
+      </div>
+    </div>
+  </body>
