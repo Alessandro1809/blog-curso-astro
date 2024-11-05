@@ -17,6 +17,12 @@ const {title, description} = Astro.props;
 		<meta name="generator" content={Astro.generator} />
 		<meta name="description" content={description}>
 		<title>{title}</title>
+		<link
+		rel="alternate"
+		type="application/rss+xml"
+		title="Alessandro Blog RSS Feed"
+		href={new URL("rss.xml", Astro.site)}
+	/>
 		<ViewTransitions />	
 	</head>
 	<body class="absolute top-0 left-0 right-0 bottom-0">
