@@ -20,7 +20,7 @@ const blogPost = await getCollection('blog',(post)=> post.data.isDraft === false
         <div class="grid grid-cols-1 gap-8 mt-10 md:mt-4 md:grid-cols-2 ">
            
 			{
-				blogPost.map((post) => <TypedBlogPost {post}/>)
+				blogPost.map((post:any) => <TypedBlogPost {post}/>)
 			}
 
           
